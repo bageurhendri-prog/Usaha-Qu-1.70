@@ -1,0 +1,6 @@
+{
+  "name": "Qu Ecosystem Master v1.65",
+  "description": "Master ekosistem Qu v1.65 dengan Master Switcher untuk BengkelQu, KedaiQu, KlinikQu, RitelQu, dan TitipQu dengan detail modul BengkelQu Grid Layout yang rapi.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

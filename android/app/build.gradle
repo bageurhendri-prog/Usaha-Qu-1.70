@@ -1,0 +1,75 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.qu.ecosystem'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.qu.ecosystem"
+        minSdk 24          // Kompatibel Android 7.0 (Nougat) ke atas
+        targetSdk 34       // Standar Android 14+
+        versionCode 165
+        versionName "1.65"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // Hindari generasi C++ architecture yang tidak diperlukan
+        ndk {
+            abiFilters.clear()
+        }
+    }
+
+    signingConfigs {
+        release {
+            // Menggunakan default Android debug key untuk rilis instan di CI tanpa konfigurasi rahasia
+            // Pengguna dapat mengganti dengan file keystore produksi mereka jika diinginkan
+            storeFile file("${System.getProperty('user.home')}/.android/debug.keystore")
+            storePassword "android"
+            keyAlias "androiddebugkey"
+            keyPassword "android"
+        }
+    }
+
+    buildTypes {
+        release {
+            // Optimasi Ekstrem: Hapus kode & resource yang tidak terpakai agar APK < 3MB
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            
+            // Fallback signing agar build release GitHub Action langsung dapat diinstal di HP
+            signingConfig signingConfigs.debug
+        }
+        debug {
+            minifyEnabled false
+            shrinkResources false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    packaging {
+        resources {
+            excludes += [
+                'META-INF/DEPENDENCIES',
+                'META-INF/LICENSE',
+                'META-INF/LICENSE.txt',
+                'META-INF/license.txt',
+                'META-INF/NOTICE',
+                'META-INF/NOTICE.txt',
+                'META-INF/notice.txt',
+                'META-INF/*.kotlin_module'
+            ]
+        }
+    }
+}
+
+dependencies {
+    // Zero Heavy Dependencies - Native Android WebView wrapper murni (<2MB APK)
+    testImplementation 'junit:junit:4.13.2'
+}
